@@ -6,20 +6,19 @@ var appConfig = require('../config/appConfig'); // configure service api urls in
 var redisClient = require('../helpers/exporters/export_redisClient').redisClient;
 modules.winston.log('debug', 'Hello again distributed log files!');
 
+
+// io.on('connection', function(socket){
+//   console.log('a user connected original');
+// });
+
+// get the socket apis from the helpers folder
+
+
 // PING
 // ============================================== 
 router.get('/ping', function(req, res){
    
     res.render('index/ping', { title: 'Express' });
-
-});
-
-
-// INDEX
-// ============================================== 
-router.get('/', function(req, res){
-   
-    res.render('index/landing', { title: 'Express' });
 
 });
 
