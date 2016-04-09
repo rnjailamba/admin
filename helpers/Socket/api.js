@@ -1,14 +1,11 @@
-var modules = require('../../controllers/setup/all_modules');//require all modules that are shared by all controllers
-var router = modules.express.Router();
+var io = require('../exporters/export_socketIO').io;
+
+io.on('connection', function (socket) {
+	console.log("connected");
+  // socket.emit('news', { hello: 'world' });
+  // socket.on('my other event', function (data) {
+  //   console.log(data);
+  // });
+});
 
 
-module.exports.functions = {
-  sayHelloInEnglish: function() {
-    return "hello";
-  },
-
-  sayHelloInSpanish: function() {
-    return "holla";
-  }
-
-};

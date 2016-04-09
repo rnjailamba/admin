@@ -35,9 +35,11 @@ app.use(function(req, res, next) {
 
 //THIS IS NOT DONE IN STARTING AS APP DIDNT HAVE REQUIRED PROPERTIES THEN
 // ==============================================
-var exportingApp = require("./controllers/setup/export_app");
+
+var exportingApp = require("./helpers/exporters/export_app");
 exportingApp.exportApp(app);
 var initHelper = require("./helpers/initializeHelpers.js");//initialize database connections , twilio etc.
+var initControllers = require("./controllers/setup/initialize.js");//initialize database connections , twilio etc.
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -68,6 +70,6 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
+console.log("hellonew");
 
 module.exports = app;
