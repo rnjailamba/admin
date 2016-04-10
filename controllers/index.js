@@ -18,10 +18,8 @@ router.get('/ping', function(req, res){
 // INDEX
 // ============================================== 
 router.get('/', function(req, res){
-  	// var isLoggedIn = loginMiddleWare.functions.isLoggedIn(req,res);
-  	// console.log("isLoggedIn" + isLoggedIn);	   	
+   	
   	loginMiddleWare.functions.isLoggedInWithRender(req,res,redisClient,'index/landing',null);
-
 
 });
 

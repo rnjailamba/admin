@@ -32,7 +32,9 @@ jQuery(document).ready(function($){
 
     var minPasswordLength = 8;
 
-    signupSelected();
+    loginSelected();
+
+    
 	//OPEN MODAL
 	// ==============================================
 	mainNav.on('click', function(event){
