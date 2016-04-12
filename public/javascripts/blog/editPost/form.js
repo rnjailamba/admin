@@ -119,7 +119,7 @@ jQuery(document).ready(function($){
                   //do nothing
                    swal({   
                       title: "You are logged in!",   
-                      text: "Happy writing",
+                      text: "Happy editing",
                       type:'success',   
                       timer: 1500,   
                       allowEscapeKey:true,
@@ -266,9 +266,113 @@ jQuery(document).ready(function($){
         $('.subcategory').val(subCategoryId);
 
       }      
-      
+    }  
 
-    }   
+// <div id="listWithHandle" class="list-group">
+//   <div class="list-group-item">
+//     <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+//     <img src="http://placehold.it/350x150">
+//     <input type="radio" name="gender" value="female">
+//     <i class="js-remove">✖</i>
+//   </div>
+//   <div class="list-group-item">
+//     <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+//     <img src="http://placehold.it/350x151">
+//     <input type="radio" name="gender" value="female">
+//     <i class="js-remove">✖</i>
+//   </div>
+//   <div class="list-group-item">
+//     <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+//     <img src="http://placehold.it/350x152">
+//     <input type="radio" name="gender" value="female">
+//     <i class="js-remove">✖</i>
+//   </div>
+// </div>
+
+
+/* ======================================
+     CREATE IMAGE EDIT ELEMENT
+   ====================================== */
+    function createImageEditElement(imageUrl){
+
+      var outerMostDiv = $('<div>')
+                              .attr("class", "list-group-item");   
+      var photoImage = $('<img>')
+                            .attr({ src:imageUrl, alt:"Image" })
+                            .attr({ height:150, width:350 });
+
+
+
+      var inputRadio = $('<input>')
+                           .attr("type", "radio")
+                           .attr("name", "coverImage")
+                           .attr("value", imageUrl);
+      var icon = $('<i>')
+                      .attr("class", "js-remove")
+                      .text('✖');
+
+                
+
+      outerMostDiv.append(photoImage);
+      outerMostDiv.append(inputRadio);
+      outerMostDiv.append(icon);
+      
+      return outerMostDiv;                                       
+
+    }    
+    
+
+/* ======================================
+     ADD IMAGES TO SORTABLE [ THE TODO LIST]
+   ====================================== */
+    function addImagesToSortable(imageList){  
+      
+      var obj = imageList;
+      var photoImage;
+      $('#listWithHandle').empty();
+      for (var i=0; i<obj.length; i++){
+        var imageUrl = obj[i]["imageUrl"];
+        imageUrl = imageUrl.substring(0, imageUrl.indexOf(".jpg")+4);
+        console.log(imageUrl);
+        $('#listWithHandle').append(createImageEditElement(imageUrl));
+      }
+
+    }       
+
+
+/* ======================================
+     UPDATE IMAGE HANDLER
+   ====================================== */
+    function updateImageHandler(imageList){
+
+      var obj = imageList;
+      if( obj == null || typeof obj == 'undefined' || obj.length == 0 ){
+        return;
+      }
+      else if( obj.length >= 1 ){
+        return addImagesToSortable(imageList);
+      } 
+      
+    }     
+
+
+    //ADD IMAGES
+    // ==============================================
+    function addImages(){
+     
+      var obj = blogContent.paragraphs;
+      console.log(obj);
+      for (var i=0; i<obj.length; i++){
+        switch( obj[i]["paragraphType"]){
+          case 'Image':
+                    var blogImage = updateImageHandler(obj[i]["imageList"]);
+                    break;
+          default:
+                    break;
+        }
+      }      
+
+    }       
 
 
     //ON PAGE LOAD
@@ -276,10 +380,10 @@ jQuery(document).ready(function($){
   $(document).ready(function(){
 
       fillInData();
+      addImages();
 
   });  
-
-
+ 
 
     //ON SUBMIT
     // ==============================================
@@ -307,7 +411,7 @@ jQuery(document).ready(function($){
         imageURLsArray.push ( {"imageUrl":myDropzone.files[i].xhr.responseURL} );
 
       }
-      if( !checkTitle && !checkCategory && !checkSubcategory){
+      if(  !checkTitle && !checkCategory && !checkSubcategory ){
         // var name = $('.myfield-name').val();
         // var about = $('.myfield-about').val();
         // var phone = $('.myfield-phone').val();
@@ -328,8 +432,8 @@ jQuery(document).ready(function($){
         blogData.tinymceText = tinymceText;
         blogData.imageURLs = imageURLsArray;
         console.log("imageURLsArray",JSON.stringify(blogData));
+        // console.log(name,title,category,subcategory,tinymceText,imageURLs);
         publishAttemptedWithFullDataWritePost = true;
-        console.log(title,category,subcategory,tinymceText,imageURLs);
         isLoggedIn(blogData);
   
       }

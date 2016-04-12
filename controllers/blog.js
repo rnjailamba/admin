@@ -50,7 +50,43 @@ router.get('/editPost/:id', function(req, res){
 // ============================================== 
 router.get('/update', function(req, res){
    
-  	loginMiddleWare.functions.isLoggedInWithRender(req,res,redisClient,'blog/index',null);
+    console.log("in the postt",req.body);
+    var data = {};
+    data.postedBy = loginMiddleWare.functions.getCustomerId(req,res);
+    data.categoryId = req.body.category;
+    data.subCategoryId = req.body.subcategory;
+    data.title = req.body.title;
+    data.isVerified = true;
+    data.paragraphs =  [
+                            {
+                                "imageList": req.body.imageURLs,
+                                "paragraphType": "Image"
+                            },    
+                            {
+                                "text": req.body.tinymceText,
+                                "paragraphType": "Text"
+                            }                 
+                        ];
+
+    console.log(JSON.stringify(data));
+    modules.request({
+        url:mappings['blogService.createBlog'], 
+        method: 'POST',
+        json: data
+      },
+        function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            bodyRet = body; 
+            console.log("pring returned bodyyy");
+            res.status(200).send(response);
+
+          }
+          else{
+            console.log("not signed up successfully");
+            res.status(404).send(response);
+
+          }
+     });
 
 });
 

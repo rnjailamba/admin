@@ -16,22 +16,35 @@
     <script src="/js/common/jquery.min.js"></script> <!-- js for jquery -->
     <script src="/js/common/modernizr-2.6.2.min.js"></script>  <!-- Modernizr /-->
     <script src="/js/common/dropzone.js"></script>  <!-- js for the add files area /-->
-    <script src="/js/blog/imageUpload.js"></script>  <!-- js for the add files area /-->
+    <script src="/js/blog/editPost/imageUpload.js"></script>  <!-- js for the add files area /-->
     <link rel="stylesheet" type="text/css" href="/css/common/tooltipster.css"></link> <!-- css for tooltipster -->
     <link rel="stylesheet" type="text/css" href="/css/blog/form.css"></link> <!-- css for text editor and form for submission , including the tooltip stuff-->
     <link rel="stylesheet" href="/css/common/sweetAlert.css"><!-- css for sweet alert -->
-
+    <link rel="stylesheet" href="/css/blog/editPost/sortable.css"><!-- css for todo list for selecting the images -->
+    <script src="/js/blog/editPost/sortable.js"></script> <!-- js for the todo list with images -->
 
 </head>
+
 <body>
 
 <form method="post" action="/blog/writePost">
+    <h1 class="heading">Blog Title</h1>
+    <div class="cd-normal-form floating-labels">
+        <fieldset>
 
+            <div class="icon">
+                <!-- <label class="cd-label" for="cd-title">Title</label> -->
+                <input class="user myfield-title required" type="text" name="cd-title" id="cd-title" type="text" aria-describedby="myfield_description">
+                <span id="myfield_description" role="tooltip">Please insert your title here</span>
+            </div>                          
+
+        </fieldset>
+    </div>
     <div class="textEditor container">
         <section>
             <h1 class="heading">Write your blog entry below</h1>
             <br/>
-                <textarea id="mytextarea" name = "textArea"></textarea>
+                <textarea id="mytextarea" name = "textArea">Hello, World!</textarea>
         </section>
         <section>
             <h1 class="heading">Enter Blog Details</h1>
@@ -45,67 +58,82 @@
                         <!--<h4>Budget</h4>-->
 
                         <p class="cd-select icon">
-                            <select class="budget" >
+                            <select class="category" name="category" >
                                 <option value="" >Select an option</option>
-
-                                <option value="0">Select Budget</option>
-                                <option value="1">&lt; $5000</option>
-                                <option value="2">$5000 - $10000</option>
-                                <option value="3">&gt; $10000</option>
+                                <option value="0">Carpenter</option>
+                                <option value="1">Carpenter</option>
+                                <option value="2">Carpenter</option>
+                                <option value="3">Carpenter</option>
                             </select>
+                            <span id="myfield_description" role="tooltip">Please select an option</span>
+
                         </p>
                     </div>
 
                     <legend>Subcategory</legend>
 
                     <div>
-                        <!--<h4>Budget</h4>-->
+                        <!-- <h4>Budget</h4> -->
 
                         <p class="cd-select icon">
-                            <select class="budget" >
+                            <select class="subcategory" name="subcategory">
                                 <option value="" >Select an option</option>
-
-                                <option value="0">Select Budget</option>
-                                <option value="1">&lt; $5000</option>
-                                <option value="2">$5000 - $10000</option>
-                                <option value="3">&gt; $10000</option>
+                                <option value="0">Door</option>
+                                <option value="1">Window</option>
+                                <option value="2">Cabinet</option>
+                                <option value="3">Floor</option>
                             </select>
+                            <span id="myfield_description" role="tooltip">Please select an option</span>
                         </p>
                     </div>
-                    <fieldset>
+
+<!--                     <fieldset>
                         <legend>Your Info</legend>
-
-                        <!--<div class="error-message">-->
-                            <!--<p>Please enter your phone number so we can send OTP</p>-->
-                        <!--</div>-->
-
                         <div class="icon">
-                            <label class="cd-label" for="cd-name">Phone</label>
-                            <input class="required user" type="text" name="cd-name" id="cd-name" >
-                        </div>
-                        <div class="icon">
-                            <label class="cd-label" for="cd-name">Name</label>
-                            <input class="user myfield required" type="text" name="cd-name" id="cd-name" type="text" aria-describedby="myfield_description">
+                            <input class="user myfield-name required" type="text" name="cd-name" id="cd-name" type="text" aria-describedby="myfield_description">
                             <span id="myfield_description" role="tooltip">Please insert your name here</span>
-                        </div>                          
-
-
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Your Info</legend>
-
-                        <!--<div class="error-message">-->
-                        <!--<p>Please enter your phone number so we can send OTP</p>-->
-                        <!--</div>-->
-
+                        </div> 
                         <div class="icon">
-                            <label class="cd-label" for="cd-name">Phone</label>
-                            <input class="user" type="text" name="cd-name" id="cd-name" >
-                        </div>
-                    </fieldset>
+                            <textarea class="message myfield-about  required" name="cd-textarea" id="cd-textarea"></textarea>
+                            <span id="myfield_description" role="tooltip">Please insert your description here</span>
+                        </div>                        
+                    </fieldset> -->
+
+
                 </fieldset>
             </div>
+            <fieldset>
+                <legend style="text-align: center;">Delete / Reorder / Select Cover Photo :</legend>
+
+               
+            </fieldset>
+
+
+              <!-- List with handle -->
+              <div id="listWithHandle" class="list-group">
+                <div class="list-group-item">
+                  <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+                  <img src="http://placehold.it/350x150">
+                  <input type="radio" name="gender" value="female">
+                  <i class="js-remove">✖</i>
+                </div>
+                <div class="list-group-item">
+                  <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+                  <img src="http://placehold.it/350x151">
+                  <input type="radio" name="gender" value="female">
+                  <i class="js-remove">✖</i>
+                </div>
+                <div class="list-group-item">
+                  <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+                  <img src="http://placehold.it/350x152">
+                  <input type="radio" name="gender" value="female">
+                  <i class="js-remove">✖</i>
+                </div>
+              </div>
+
+           
+            <br>               
+
             <div class = "imageUpload">
                 <fieldset>
                     <legend>Select Multiple Images ( Optional ):</legend>
@@ -119,13 +147,12 @@
 
             <div class="cd-normal-form floating-labels" >
                 <div>
-                    <input type="submit" value="Enter OTP and Publish Blog"></input>                    
+                    <input type="submit" value="Update Blog"></input>                    
                 </div>
             </div>
         </section>
 
         <section>
-
 
         </section>
 
@@ -145,10 +172,26 @@
 
     var isLoggedIn = <%- JSON.stringify(isLoggedIn) %>; 
     var blogContent = <%- (content) %>; 
-    console.log(JSON.stringify(blogContent));
+    var contentForTinyMCE = blogContent[0]["paragraphs"][1]["text"];
+    // console.log(JSON.stringify(blogContent));
     blogContent = blogContent[0];
+    var blogId = blogContent.blogId;   
     // var blogComments = <%- (comments) %>; 
     // console.log(JSON.stringify(blogComments));
+
+
+    var byId = function (id) { return document.getElementById(id); };
+
+    // List with handle
+    Sortable.create(byId('listWithHandle'), {
+        // handle: '.glyphicon-move',
+        animation: 150,
+        filter: '.js-remove',
+        onFilter: function (evt) {
+          evt.item.parentNode.removeChild(evt.item);
+        }
+
+    });
 
 </script>
 <script>
@@ -176,14 +219,10 @@
                 ed.on('init', function(args) {
                     console.debug(args.target.id);
                     console.log(tinymce.activeEditor);
-                    tinymce.activeEditor.setContent('<span>some</span>');
+                    tinymce.activeEditor.setContent(contentForTinyMCE);
                 });
             }
         });
-
-
-
-
     });
 
 
@@ -195,7 +234,7 @@
 <script src="/js/common/sweetAlert.js"></script><!-- js for sweet alert -->
 
 <script src="/js/common/tooltipster.js"></script> <!-- js for tooltipster -->
-<script src="/js/blog/form.js"></script> <!-- js for the form - handles form validation and tooltip and floating stuff -->
+<script src="/js/blog/editPost/form.js"></script> <!-- js for the form - handles form validation and tooltip and floating stuff -->
 <link rel="stylesheet" type="text/css" href="/css/blog/write.css"></link> <!-- css for the tinymce and headings and image upload area -->
 
 </html>
