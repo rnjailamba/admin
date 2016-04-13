@@ -94,12 +94,20 @@ myDropzone.on("sending", function(file) {
 myDropzone.on("queuecomplete", function(progress) {
   document.querySelector("#total-progress").style.opacity = "0";
   console.log(myDropzone.files);
+
   var text = "";
   var i;
   for (i = 0; i < myDropzone.files.length; i++) {
       text += myDropzone.files[i].xhr.responseURL;
+      lastUrl = myDropzone.files[i].xhr.responseURL;
   }
-  // alert(text);
+  
+  if (typeof addImagesToSortable != "undefined") { 
+    // safe to use the function
+    addImagesToSortable(lastUrl);
+
+  }
+
 });
 
 // Setup the buttons for all transfers

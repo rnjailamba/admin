@@ -16,19 +16,21 @@
     <script src="/js/common/jquery.min.js"></script> <!-- js for jquery -->
     <script src="/js/common/modernizr-2.6.2.min.js"></script>  <!-- Modernizr /-->
     <script src="/js/common/dropzone.js"></script>  <!-- js for the add files area /-->
-    <script src="/js/blog/editPost/imageUpload.js"></script>  <!-- js for the add files area /-->
     <link rel="stylesheet" type="text/css" href="/css/common/tooltipster.css"></link> <!-- css for tooltipster -->
     <link rel="stylesheet" type="text/css" href="/css/blog/form.css"></link> <!-- css for text editor and form for submission , including the tooltip stuff-->
     <link rel="stylesheet" href="/css/common/sweetAlert.css"><!-- css for sweet alert -->
     <link rel="stylesheet" href="/css/blog/editPost/sortable.css"><!-- css for todo list for selecting the images -->
     <script src="/js/blog/editPost/sortable.js"></script> <!-- js for the todo list with images -->
+    <script src="/js/blog/editPost/form.js"></script> <!-- js for the form - handles form validation and tooltip and floating stuff -->
+    <script src="/js/blog/editPost/imageUpload.js"></script>  <!-- js for the add files area /-->
+    
 
 </head>
 
 <body>
 
 <form method="post" action="/blog/writePost">
-    <h1 class="heading">Blog Title</h1>
+    <h1 class="heading">Change Blog Title</h1>
     <div class="cd-normal-form floating-labels">
         <fieldset>
 
@@ -42,12 +44,12 @@
     </div>
     <div class="textEditor container">
         <section>
-            <h1 class="heading">Write your blog entry below</h1>
+            <h1 class="heading">Change the blog entry below</h1>
             <br/>
                 <textarea id="mytextarea" name = "textArea">Hello, World!</textarea>
         </section>
         <section>
-            <h1 class="heading">Enter Blog Details</h1>
+            <h1 class="heading">Change Blog Details</h1>
             <div class="cd-normal-form floating-labels">
 
 
@@ -108,7 +110,6 @@
                
             </fieldset>
 
-
               <!-- List with handle -->
               <div id="listWithHandle" class="list-group">
                 <div class="list-group-item">
@@ -131,12 +132,11 @@
                 </div>
               </div>
 
-           
             <br>               
 
             <div class = "imageUpload">
                 <fieldset>
-                    <legend>Select Multiple Images ( Optional ):</legend>
+                    <legend>Add Multiple Images To This Blog Post ( Optional ):</legend>
 
                     <!--<div class="icon">-->
                     <!--<input type="file" name="img" multiple></input>-->
@@ -158,10 +158,6 @@
 
     </div>
 </form>
-
-
-
-
 
 <br></br>
 <br></br>
@@ -234,7 +230,6 @@
 <script src="/js/common/sweetAlert.js"></script><!-- js for sweet alert -->
 
 <script src="/js/common/tooltipster.js"></script> <!-- js for tooltipster -->
-<script src="/js/blog/editPost/form.js"></script> <!-- js for the form - handles form validation and tooltip and floating stuff -->
 <link rel="stylesheet" type="text/css" href="/css/blog/write.css"></link> <!-- css for the tinymce and headings and image upload area -->
 
 </html>

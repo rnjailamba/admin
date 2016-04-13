@@ -34,8 +34,8 @@ router.get('/editPost/:id', function(req, res){
   var blogCommentsPromise = getBlogCommentsPromise(blogId,1);
 
   modules.Promise.all([blogContentPromise,blogCommentsPromise]).then(function(results){
-    // console.log("data from blog contetn promeis",results[0]);
-    // console.log("data from blog contetn promeis",results[1]);
+    console.log("data from blog contetn promeis",results[0]);
+    console.log("data from blog contetn promeis",results[1]);
     var combinedData = getCombinedObjects(results[0],results[1]);
     loginMiddleWare.functions.isLoggedInWithRender(req,res,redisClient,'blog/editPost',combinedData);
   })
@@ -46,47 +46,47 @@ router.get('/editPost/:id', function(req, res){
 });
 
 
-// UPDATE
-// ============================================== 
-router.get('/update', function(req, res){
+router.post('/editPost/:id', function(req, res){
+
+  var blogId = req.params.id;
    
-    console.log("in the postt",req.body);
-    var data = {};
-    data.postedBy = loginMiddleWare.functions.getCustomerId(req,res);
-    data.categoryId = req.body.category;
-    data.subCategoryId = req.body.subcategory;
-    data.title = req.body.title;
-    data.isVerified = true;
-    data.paragraphs =  [
-                            {
-                                "imageList": req.body.imageURLs,
-                                "paragraphType": "Image"
-                            },    
-                            {
-                                "text": req.body.tinymceText,
-                                "paragraphType": "Text"
-                            }                 
-                        ];
+  console.log("in the post of editPost",req.body);
+  var data = {};
+  data.approvedBy = loginMiddleWare.functions.getCustomerId(req,res);
+  data.categoryId = req.body.category;
+  data.subCategoryId = req.body.subcategory;
+  data.title = req.body.title;
+  data.isVerified = true;
+  data.paragraphs =  [
+                          {
+                              "imageList": req.body.imageURLs,
+                              "paragraphType": "Image"
+                          },    
+                          {
+                              "text": req.body.tinymceText,
+                              "paragraphType": "Text"
+                          }                 
+                      ];
 
-    console.log(JSON.stringify(data));
-    modules.request({
-        url:mappings['blogService.createBlog'], 
-        method: 'POST',
-        json: data
-      },
-        function (error, response, body) {
-          if (!error && response.statusCode == 200) {
-            bodyRet = body; 
-            console.log("pring returned bodyyy");
-            res.status(200).send(response);
+  console.log(JSON.stringify(data));
+  modules.request({
+      url:mappings['blogService.updateBlog'], 
+      method: 'POST',
+      json: data
+    },
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          bodyRet = body; 
+          console.log("pring returned bodyyy");
+          res.status(200).send(response);
 
-          }
-          else{
-            console.log("not signed up successfully");
-            res.status(404).send(response);
+        }
+        else{
+          console.log("not signed up successfully");
+          res.status(404).send(response);
 
-          }
-     });
+        }
+   });
 
 });
 
@@ -94,20 +94,20 @@ router.get('/update', function(req, res){
 // PING
 // ============================================== 
 router.get('/ping', function(req, res){
-  var bodyRet;
-  modules.request(
-        {url:mappings['blogService.ping']}, 
-        function (error, response, body) {
-          if (!error && response.statusCode == 200) {
-                  bodyRet = body;
+  // var bodyRet;
+  // modules.request(
+  //       {url:mappings['blogService.ping']}, 
+  //       function (error, response, body) {
+  //         if (!error && response.statusCode == 200) {
+  //                 bodyRet = body;
 
-            console.log("pring returned body1",body);
-            res.send(body);
-          }
-          else{
+  //           console.log("pring returned body1",body);
+  //           res.send(body);
+  //         }
+  //         else{
 
-          }
-     });
+  //         }
+  //    });
 
    // var data = {};
    //  data.postedBy = 12;
@@ -238,7 +238,53 @@ router.get('/ping', function(req, res){
     //         res.status(404).send(response);
     //         console.log("not signed up successfully");
     //       }
-    //  });    
+    //  });   
+
+
+
+
+   var data = {};
+   var oldBlogCondition = {};
+   oldBlogCondition.blogId = "570d2a9696311f695812a10e";
+   data.oldBlogCondition = oldBlogCondition;
+
+   var newBlogData = {};
+
+    newBlogData.postedBy = 1296;
+    newBlogData.categoryId = 11;
+    newBlogData.subCategoryId = 11;
+    newBlogData.isVerified = true;
+    newBlogData.paragraphs =  [
+                            {
+                                "text": "hello mister",
+                                "paragraphType": "Text"
+                            }
+                        ];
+    data.newBlogData = newBlogData;
+    data.userAboutus =  "heelo friend";
+    data.name =  "raj";
+    data.coverImage =  "imge.com";
+    data.customerId =  1296 ;          
+    console.log("update request",data)        
+
+    modules.request({
+        url:mappings['blogService.updateBlog'], 
+        method: 'POST',
+        json: data
+      },
+        function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            bodyRet = body; 
+            console.log("pring returned bodyyy");
+            res.status(200).send(body);
+          }
+          else{
+            res.status(404).send(response);
+            console.log("not signed up successfully");
+          }
+     });
+
+     
 });
 
 

@@ -38,7 +38,9 @@ module.exports = function(){
        'blogService.addComment': blogServiceURL+'addComment',
        'blogService.addReplyComment': blogServiceURL+'addReplyComment',
        'blogService.readBlogs': blogServiceURL+'readBlogs',       
-       'blogService.readComments': blogServiceURL+'readComments'      
+       'blogService.readComments': blogServiceURL+'readComments',
+       'blogService.updateBlog': blogServiceURL+'updateBlog' 
+
 
 
     };

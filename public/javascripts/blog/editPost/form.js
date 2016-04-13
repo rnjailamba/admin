@@ -31,7 +31,8 @@ jQuery(document).ready(function($){
       mainNav = $('.main-nav');
 
   if( $('.floating-labels').length > 0 ) floatLabels();
-  
+});
+ 
 
   //FLOAT LABELS
   // ==============================================
@@ -319,22 +320,31 @@ jQuery(document).ready(function($){
       
       return outerMostDiv;                                       
 
-    }    
-    
+    } 
 
 /* ======================================
      ADD IMAGES TO SORTABLE [ THE TODO LIST]
    ====================================== */
-    function addImagesToSortable(imageList){  
+    function addImagesToSortable(imageUrl){  
+      
+      imageUrl = imageUrl.substring(0, imageUrl.indexOf(".jpg")+4);
+      console.log(imageUrl);
+      $('#listWithHandle').append(createImageEditElement(imageUrl));
+
+    }            
+    
+
+/* ======================================
+     LOOP THROUGH IMAGES 
+   ====================================== */
+    function loopThroughImages(imageList){  
       
       var obj = imageList;
       var photoImage;
       $('#listWithHandle').empty();
       for (var i=0; i<obj.length; i++){
         var imageUrl = obj[i]["imageUrl"];
-        imageUrl = imageUrl.substring(0, imageUrl.indexOf(".jpg")+4);
-        console.log(imageUrl);
-        $('#listWithHandle').append(createImageEditElement(imageUrl));
+        addImagesToSortable(imageUrl);
       }
 
     }       
@@ -350,7 +360,7 @@ jQuery(document).ready(function($){
         return;
       }
       else if( obj.length >= 1 ){
-        return addImagesToSortable(imageList);
+        return loopThroughImages(imageList);
       } 
       
     }     
@@ -452,4 +462,3 @@ jQuery(document).ready(function($){
 
     });
   });   
-});
