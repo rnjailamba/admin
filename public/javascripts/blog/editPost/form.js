@@ -174,7 +174,7 @@ jQuery(document).ready(function($){
 
     //IS LOGGED IN AND SHOW ALERT IF NOT
     // ==============================================
-    function isLoggedIn(blogData){
+    function isLoggedInCheck(blogData){
 
         var x = $.ajax({
             url:"/loginMiddleware/isLoggedIn",
@@ -216,7 +216,7 @@ jQuery(document).ready(function($){
     function ajaxCallForUpdateBlog(data){
         console.log("in Update log ",data);
         $.ajax({
-            url:"/blog/writePost",
+            url:"/blog/editPost/"+blogId,
             type: 'POST',
             async: true,
             data: JSON.stringify(data),
@@ -227,10 +227,10 @@ jQuery(document).ready(function($){
             success: function(response) {
                 console.log('Blog submission succesfull',response);
                 if(response.statusCode == 200 ){
-                  window.location = "/blog/blogSummary?status=200";
+                  window.location = "/blog/blogUpdateSummary?status=200";
                 }
                 else{
-                  window.location = "/blog/blogSummary";
+                  window.location = "/blog/blogUpdateSummary";
                 }
             },
             error: function(response) {
@@ -393,6 +393,7 @@ jQuery(document).ready(function($){
       addImages();
 
   });  
+
  
 
     //ON SUBMIT
@@ -416,9 +417,11 @@ jQuery(document).ready(function($){
       var imageURLs = "";
       var imageURLsArray = new Array(); // or the shortcut: = []
       var i;
-      for (i = 0; i < myDropzone.files.length; i++) {
-        imageURLs += myDropzone.files[i].xhr.responseURL;
-        imageURLsArray.push ( {"imageUrl":myDropzone.files[i].xhr.responseURL} );
+      var imageElements = $('#listWithHandle .list-group-item img');
+      for (i = 0; i < imageElements.length; i++) {
+        var $html = $(imageElements[i]);    
+        var imageSrc = $html.attr('src');
+        imageURLsArray.push ( {"imageUrl":imageSrc} );
 
       }
       if(  !checkTitle && !checkCategory && !checkSubcategory ){
@@ -444,7 +447,7 @@ jQuery(document).ready(function($){
         console.log("imageURLsArray",JSON.stringify(blogData));
         // console.log(name,title,category,subcategory,tinymceText,imageURLs);
         publishAttemptedWithFullDataWritePost = true;
-        isLoggedIn(blogData);
+        isLoggedInCheck(blogData);
   
       }
       else{

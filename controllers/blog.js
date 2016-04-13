@@ -48,47 +48,71 @@ router.get('/editPost/:id', function(req, res){
 
 router.post('/editPost/:id', function(req, res){
 
-  var blogId = req.params.id;
-   
-  console.log("in the post of editPost",req.body);
-  var data = {};
-  data.approvedBy = loginMiddleWare.functions.getCustomerId(req,res);
-  data.categoryId = req.body.category;
-  data.subCategoryId = req.body.subcategory;
-  data.title = req.body.title;
-  data.isVerified = true;
-  data.paragraphs =  [
-                          {
-                              "imageList": req.body.imageURLs,
-                              "paragraphType": "Image"
-                          },    
-                          {
-                              "text": req.body.tinymceText,
-                              "paragraphType": "Text"
-                          }                 
-                      ];
+    console.log("in the post of editPost",req.body);
+    var data = {};
+    var oldBlogCondition = {};
+    oldBlogCondition.blogId = req.params.id;
+    data.oldBlogCondition = oldBlogCondition;
 
-  console.log(JSON.stringify(data));
-  modules.request({
-      url:mappings['blogService.updateBlog'], 
-      method: 'POST',
-      json: data
-    },
-      function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          bodyRet = body; 
-          console.log("pring returned bodyyy");
-          res.status(200).send(response);
+    var newBlogData = {};
 
-        }
-        else{
-          console.log("not signed up successfully");
-          res.status(404).send(response);
+    newBlogData.categoryId = req.body.category;
+    newBlogData.subCategoryId = req.body.subcategory;
+    newBlogData.approvedBy = loginMiddleWare.functions.getCustomerId(req,res);
+    newBlogData.isVerified = true;
+    newBlogData.paragraphs =  [
+                                  {
+                                      "imageList": req.body.imageURLs,
+                                      "paragraphType": "Image"
+                                  },    
+                                  {
+                                      "text": req.body.tinymceText,
+                                      "paragraphType": "Text"
+                                  }                 
+                              ];
+    newBlogData.coverImageUrl =  "imge.com";
+                        
+    data.newBlogData = newBlogData;
+    data.userAboutus =  "shit";
+    data.name =  "raj";
+    data.customerId =  1310 ;          
+    console.log("update request",data)        
 
-        }
-   });
+    modules.request({
+        url:mappings['blogService.updateBlog'], 
+        method: 'POST',
+        json: data
+      },
+        function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            bodyRet = body; 
+            console.log("pring returned bodyyy");
+            res.status(200).send(response);
+          }
+          else{
+            res.status(404).send(response);
+            console.log("not signed up successfully");
+          }
+     });  
+
+
 
 });
+
+
+// BLOGUPDATESUMMARY
+// ==============================================
+router.get('/blogUpdateSummary', function(req, res, next) {
+  console.log(req.query);
+  if( req.query.status == 200 ){
+    res.render('blog/blogUpdateSummary', { title: 'Blog successfully Updated' });
+  }
+  else{
+    res.render('blog/blogUpdateSummary', { title: 'Blog not successfully Updated' });
+  }
+  
+});
+
 
 
 // PING
@@ -245,26 +269,26 @@ router.get('/ping', function(req, res){
 
    var data = {};
    var oldBlogCondition = {};
-   oldBlogCondition.blogId = "570d2a9696311f695812a10e";
+   oldBlogCondition.blogId = "570dee7596311f6e619952f8";
    data.oldBlogCondition = oldBlogCondition;
 
    var newBlogData = {};
 
-    newBlogData.postedBy = 1296;
     newBlogData.categoryId = 11;
     newBlogData.subCategoryId = 11;
     newBlogData.isVerified = true;
     newBlogData.paragraphs =  [
                             {
-                                "text": "hello mister",
+                                "text": "hello fucker",
                                 "paragraphType": "Text"
                             }
                         ];
+    newBlogData.coverImageUrl =  "imge.com";
+
     data.newBlogData = newBlogData;
-    data.userAboutus =  "heelo friend";
+    data.userAboutus =  "shit";
     data.name =  "raj";
-    data.coverImage =  "imge.com";
-    data.customerId =  1296 ;          
+    data.customerId =  1310 ;          
     console.log("update request",data)        
 
     modules.request({
