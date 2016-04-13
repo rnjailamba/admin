@@ -55,7 +55,7 @@ router.post('/editPost/:id', function(req, res){
     data.oldBlogCondition = oldBlogCondition;
 
     var newBlogData = {};
-
+    newBlogData.title = req.body.title;    
     newBlogData.categoryId = req.body.category;
     newBlogData.subCategoryId = req.body.subcategory;
     newBlogData.approvedBy = loginMiddleWare.functions.getCustomerId(req,res);
@@ -70,11 +70,10 @@ router.post('/editPost/:id', function(req, res){
                                       "paragraphType": "Text"
                                   }                 
                               ];
-    newBlogData.coverImageUrl =  "imge.com";
-                        
+    newBlogData.coverImageUrl =  req.body.coverImageUrl;
     data.newBlogData = newBlogData;
-    data.userAboutus =  "shit";
-    data.name =  "raj";
+    // data.userAboutus =  req.body.about;
+    // data.name =  req.body.imageURLs;
     data.customerId =  1310 ;          
     console.log("update request",data)        
 

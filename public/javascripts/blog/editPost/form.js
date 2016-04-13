@@ -276,18 +276,6 @@ jQuery(document).ready(function($){
 //     <input type="radio" name="gender" value="female">
 //     <i class="js-remove">✖</i>
 //   </div>
-//   <div class="list-group-item">
-//     <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
-//     <img src="http://placehold.it/350x151">
-//     <input type="radio" name="gender" value="female">
-//     <i class="js-remove">✖</i>
-//   </div>
-//   <div class="list-group-item">
-//     <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
-//     <img src="http://placehold.it/350x152">
-//     <input type="radio" name="gender" value="female">
-//     <i class="js-remove">✖</i>
-//   </div>
 // </div>
 
 
@@ -381,8 +369,53 @@ jQuery(document).ready(function($){
                     break;
         }
       }      
+    }     
 
-    }       
+
+    //GET COVER IMAGE
+    // ==============================================
+    function getCoverImage(imageElements){
+      var isChecked = $("input:radio[name='coverImage']").is(":checked");
+      if( isChecked ){
+        return $("input:radio[name='coverImage']").val()
+      }
+      else{
+        return null;
+      }
+
+    }        
+
+
+    //ADD IMAGES TO ARRAY
+    // ==============================================
+    function addImagesToArray(imageElements){
+     
+      var imageURLsArray = new Array();
+      for (var i = 0; i < imageElements.length; i++) {
+        var $html = $(imageElements[i]);    
+        var imageSrc = $html.attr('src');
+        imageURLsArray.push ( {"imageUrl":imageSrc} );
+      }  
+      return imageURLsArray;
+
+    }    
+
+
+    //SHOW ALERT
+    // ==============================================
+    function showAlert(text){
+
+      sweetAlert("Oops...", "", "error");
+        swal({   
+                title: "Oops.....",   
+                text: text,
+                timer: 1500,   
+                allowEscapeKey:true,
+                allowOutsideClick:true,       
+                showConfirmButton: true  
+              });
+
+    }         
 
 
     //ON PAGE LOAD
@@ -407,23 +440,20 @@ jQuery(document).ready(function($){
       var checkTitle = checkInputTextFieldEmpty('.myfield-title',e);
       var checkCategory = checkInputSelectFieldEmpty('.category',e);
       var checkSubcategory = checkInputSelectFieldEmpty('.subcategory',e);
-
+      var imageURLs = "";
+      var imageURLsArray = new Array(); // or the shortcut: = []
+      var imageElements = $('#listWithHandle .list-group-item img');
+      var coverImageUrl;
         // as soon as a key is pressed on the keyboard, hide the tooltip.
       $(window).keypress(function() {
         $('.myfield').tooltipster('hide');
 
       });
 
-      var imageURLs = "";
-      var imageURLsArray = new Array(); // or the shortcut: = []
-      var i;
-      var imageElements = $('#listWithHandle .list-group-item img');
-      for (i = 0; i < imageElements.length; i++) {
-        var $html = $(imageElements[i]);    
-        var imageSrc = $html.attr('src');
-        imageURLsArray.push ( {"imageUrl":imageSrc} );
 
-      }
+      imageURLsArray = addImagesToArray(imageElements);
+      coverImageUrl = getCoverImage();
+
       if(  !checkTitle && !checkCategory && !checkSubcategory ){
         // var name = $('.myfield-name').val();
         // var about = $('.myfield-about').val();
@@ -432,7 +462,6 @@ jQuery(document).ready(function($){
         var category = $('.category').val();
         var subcategory = $('.subcategory').val();      
         var tinymceText = tinyMCE.get('mytextarea').getContent();
-
         var blogData = {};
         // blogData.name = name;
         // blogData.about = about;
@@ -444,23 +473,24 @@ jQuery(document).ready(function($){
         blogData.subcategory = subcategory;
         blogData.tinymceText = tinymceText;
         blogData.imageURLs = imageURLsArray;
+        blogData.coverImageUrl = coverImageUrl;
         console.log("imageURLsArray",JSON.stringify(blogData));
         // console.log(name,title,category,subcategory,tinymceText,imageURLs);
-        publishAttemptedWithFullDataWritePost = true;
-        isLoggedInCheck(blogData);
+        if(imageURLsArray.length < 1){
+          showAlert("You have not added any photos ! :)");
+        }
+        else if(coverImageUrl == null ){
+          showAlert("You have not selected a cover photo ! :)");
+        }
+        else{
+          publishAttemptedWithFullDataWritePost = true;
+          isLoggedInCheck(blogData);          
+        }
+
   
       }
       else{
-        sweetAlert("Oops...", "", "error");
-          swal({   
-                  title: "Oops.....",   
-                  text: "You have not filled up all the required fields above ! :)",
-                  type:'error',   
-                  timer: 1500,   
-                  allowEscapeKey:true,
-                  allowOutsideClick:true,       
-                  showConfirmButton: true  
-                });
+        showAlert("You have not filled up all the required fields above ! :)");
       }
 
     });
