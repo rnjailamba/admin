@@ -34,10 +34,18 @@ router.get('/editPost/:id', function(req, res){
   var blogCommentsPromise = getBlogCommentsPromise(blogId,1);
 
   modules.Promise.all([blogContentPromise,blogCommentsPromise]).then(function(results){
-    console.log("data from blog contetn promeis",results[0]);
-    console.log("data from blog contetn promeis",results[1]);
+    console.log("data from blog content promeis",results[0]);
+    console.log("data from blog comment promeis",results[1]);
     var combinedData = getCombinedObjects(results[0],results[1]);
-    loginMiddleWare.functions.isLoggedInWithRender(req,res,redisClient,'blog/editPost',combinedData);
+    var blogType = JSON.parse(combinedData.content)[0]["blogType"];
+    if( blogType == 'dynamic')
+      loginMiddleWare.functions.isLoggedInWithRender(req,res,redisClient,'blog/editPost1',combinedData);
+    else if( blogType == 'normal')
+      loginMiddleWare.functions.isLoggedInWithRender(req,res,redisClient,'blog/editPost',combinedData);
+    else
+      loginMiddleWare.functions.isLoggedInWithRender(req,res,redisClient,'error',null);
+
+
   })
   .catch(function(error){
     //do something with the error and handle it
@@ -93,10 +101,10 @@ router.post('/editPost/:id', function(req, res){
             console.log("not signed up successfully");
           }
      });  
-
-
-
 });
+
+
+
 
 
 // BLOGUPDATESUMMARY
