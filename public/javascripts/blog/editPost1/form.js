@@ -448,12 +448,57 @@ jQuery(document).ready(function($){
     }   
 
 
+    // {
+    //     "type": "list",
+    //     "data": {
+    //         "format": "html",
+    //         "listItems": [
+    //             {
+    //                 "content": "fdfdfd\\f\\"
+    //             },
+    //             {
+    //                 "content": "fdfd"
+    //             },
+    //             {
+    //                 "content": ""
+    //             }
+    //         ]
+    //     }
+    // },
+
+
+    //GET JSON FROM UL
+    // ==============================================
+    function getJsonFromUl(contents){
+
+      var theListItems = new Array();
+
+      var items = contents.find("li");
+      var listText;
+      for (var i = 0; i < items.length; ++i) {
+        // console.log($(items[i])[0].innerHTML);
+        listText = $(items[i])[0].innerHTML;
+        if( listText && listText.length > 0 ){
+          
+          var data = {};
+          data.content = listText;
+          theListItems.push(data);
+
+        }
+
+      }
+      // console.log(JSON.stringify(theListItems));
+      return theListItems;
+    }
+
+
     //GET FORMATTED DATA
     // ==============================================
     function getFormattedData(contents,tagName){
 
       var dataPush = {};
       var theText = {};
+      var theList = {};
       switch(tagName){
         case "H3":
                   dataPush.type = "heading";
@@ -461,11 +506,16 @@ jQuery(document).ready(function($){
                   theText.text = contents[0].outerHTML;
                   return dataPush;
         case "P":
-
                   dataPush.type = "text";
                   dataPush.data = theText;
                   theText.text = contents[0].outerHTML;        
                   return dataPush;
+        case "UL":
+                  dataPush.type = "list";
+                  dataPush.data = {};
+                  dataPush.data.listItems = getJsonFromUl(contents);
+                  dataPush.data.format = "html";
+                  return dataPush;                  
         default:
                 break;                                    
       }
@@ -473,9 +523,9 @@ jQuery(document).ready(function($){
     }           
 
 
-    //FILL IN SIRTREVOR
+    //FILL IN SIRTREVOR AND INITIALIZE
     // ==============================================
-    function fillInSirTrevor(){
+    function fillInSirTrevorAndInitialize(){
       var paragraphs = blogContent["paragraphs"];
       var sirTrevorArray = new Array();
       console.log("paragraphs",paragraphs);
@@ -541,7 +591,7 @@ jQuery(document).ready(function($){
     $(document).ready(function(){
 
         fillInTextFields();
-        fillInSirTrevor();
+        fillInSirTrevorAndInitialize();
         // addImages();
 
     });  
