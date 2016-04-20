@@ -614,7 +614,6 @@ jQuery(document).ready(function($){
       dataPush.data.format = "html";
       dataPush.data.caption = {};
       dataPush.data.caption.text = null;
-      alert("caption");
       return dataPush;
     }   
 
@@ -709,14 +708,133 @@ jQuery(document).ready(function($){
       });      
     }      
 
+/* ======================================
+     CREATE IMAGE EDIT ELEMENT
+   ====================================== */
+    function createImageEditElement(imageUrl){
 
+      var outerMostDiv = $('<div>')
+                              .attr("class", "list-group-item");   
+      var photoImage = $('<img>')
+                            .attr({ src:imageUrl, alt:"Image" })
+                            .attr({ height:150, width:350 });
+
+
+
+      var inputRadio = $('<input>')
+                           .attr("type", "radio")
+                           .attr("name", "coverImage")
+                           .attr("value", imageUrl);
+      var icon = $('<i>')
+                      .attr("class", "js-remove")
+                      .text('✖');
+
+                
+
+      outerMostDiv.append(photoImage);
+      outerMostDiv.append(inputRadio);
+      outerMostDiv.append(icon);
+      
+      return outerMostDiv;                                       
+
+    } 
+
+/* ======================================
+     ADD IMAGES TO SORTABLE [ THE TODO LIST]
+   ====================================== */
+    function addImagesToSortable(imageUrl){  
+      
+      imageUrl = imageUrl.substring(0, imageUrl.indexOf(".jpg")+4);
+      console.log(imageUrl);
+      $('#listWithHandle').append(createImageEditElement(imageUrl));
+
+    }            
+    
+
+/* ======================================
+     LOOP THROUGH IMAGES 
+   ====================================== */
+    function loopThroughImages(imageList){  
+      
+      var obj = imageList;
+      var photoImage;
+      $('#listWithHandle').empty();
+      for (var i=0; i<obj.length; i++){
+        var imageUrl = obj[i]["imageUrl"];
+        addImagesToSortable(imageUrl);
+      }
+
+    }       
+
+
+/* ======================================
+     UPDATE IMAGE HANDLER
+   ====================================== */
+    function updateImageHandler(imageList){
+
+      var obj = imageList;
+      if( obj == null || typeof obj == 'undefined' || obj.length == 0 ){
+        return;
+      }
+      else if( obj.length >= 1 ){
+        return loopThroughImages(imageList);
+      } 
+      
+    }         
+
+
+    //ADD IMAGES
+    // ==============================================
+    function addImages(){
+     
+      var obj = blogContent.paragraphs;
+      console.log(obj);
+      for (var i=0; i<obj.length; i++){
+        switch( obj[i]["paragraphType"]){
+          case 'Image':
+                    var blogImage = updateImageHandler(obj[i]["imageList"]);
+                    break;
+          default:
+                    break;
+        }
+      }      
+    }     
+
+
+    //GET COVER IMAGE
+    // ==============================================
+    function getCoverImage(imageElements){
+      var isChecked = $("input:radio[name='coverImage']").is(":checked");
+      if( isChecked ){
+        return $("input:radio[name='coverImage']").val()
+      }
+      else{
+        return null;
+      }
+
+    }        
+
+
+    //ADD IMAGES TO ARRAY
+    // ==============================================
+    function addImagesToArray(imageElements){
+     
+      var imageURLsArray = new Array();
+      for (var i = 0; i < imageElements.length; i++) {
+        var $html = $(imageElements[i]);    
+        var imageSrc = $html.attr('src');
+        imageURLsArray.push ( {"imageUrl":imageSrc} );
+      }  
+      return imageURLsArray;
+
+    }   
     //ON PAGE LOAD
     // ==============================================      
     $(document).ready(function(){
 
         fillInTextFields();
         fillInSirTrevorAndInitialize();
-        // addImages();
+        addImages();
 
     });  
 
@@ -772,7 +890,6 @@ jQuery(document).ready(function($){
   			    swal({   
                  	 	title: "Oops.....",   
                  	 	text: "You have not filled up all the required fields above ! :)",
-                 	 	type:'error',   
                  	 	timer: 1500,   
           					allowEscapeKey:true,
           					allowOutsideClick:true,			 	

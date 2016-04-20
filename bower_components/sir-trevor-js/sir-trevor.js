@@ -3341,7 +3341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    try {
 	      // Ensure the JSON string has a data element that's an array
-	      console.log(data);
+	      // console.log(data);
 	      var jsonStr = JSON.parse(data);
 	      if (!_.isUndefined(jsonStr.data)) {
 	        result = jsonStr;
@@ -3509,7 +3509,49 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  block.resetMessages();
 
+	/* ======================================
+	     CREATE IMAGE EDIT ELEMENT
+	   ====================================== */
+	    function createImageEditElement(imageUrl){
+
+	      var outerMostDiv = $('<div>')
+	                              .attr("class", "list-group-item");   
+	      var photoImage = $('<img>')
+	                            .attr({ src:imageUrl, alt:"Image" })
+	                            .attr({ height:150, width:350 });
+
+
+
+	      var inputRadio = $('<input>')
+	                           .attr("type", "radio")
+	                           .attr("name", "coverImage");
+	      var icon = $('<i>')
+	                      .attr("class", "js-remove")
+	                      .text('✖');
+
+	                
+
+	      outerMostDiv.append(photoImage);
+	      outerMostDiv.append(inputRadio);
+	      outerMostDiv.append(icon);
+	      
+	      return outerMostDiv;                                       
+
+    } 	  
+	/* ======================================
+	     ADD IMAGES TO SORTABLE [ THE TODO LIST]
+	   ====================================== */
+	    function addImagesToSortable(imageUrl){  
+	      
+	      imageUrl = imageUrl.substring(0, imageUrl.indexOf(".jpg")+4);
+	      console.log(imageUrl);
+	      $('#listWithHandle').append(createImageEditElement(imageUrl));
+
+	    }     	  
+
 	  var callbackSuccess = function(data) {
+
+	  	var imageUrl = data;
 	  	var z = {url: data};
 		var x = {};
 		x.file = z
@@ -3518,7 +3560,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (true) {
 	      arguments[0] = data;
 	      success.apply(block, arguments, data);
-	    }
+	    }    
 
 	  };
 
@@ -3557,6 +3599,9 @@ return /******/ (function(modules) { // webpackBootstrap
                processData: false,
                headers: {'Content-Type': 'image;charset=UTF-8'},
                type: "PUT",
+               success: function(response) {
+               		addImagesToSortable(returnedURL);
+               }
 
              });
 
