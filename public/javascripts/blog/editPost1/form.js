@@ -492,9 +492,9 @@ jQuery(document).ready(function($){
     }
 
 
-    //GET FORMATTED DATA
+    //GET FORMATTED TEXT DATA
     // ==============================================
-    function getFormattedData(contents,tagName){
+    function getFormattedTextData(contents,tagName){
 
       var dataPush = {};
       var theText = {};
@@ -520,7 +520,127 @@ jQuery(document).ready(function($){
                 break;                                    
       }
 
-    }           
+    }  
+
+
+/* ======================================
+     PARSE YOUTUBE URL
+   ====================================== */
+    function parseYoutubeUrl(videoUrl){
+      var url = videoUrl;
+      var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      var match = url.match(regExp);
+      if (match && match[2].length == 11) {
+        return match[2];
+      } else {
+          alert("not a youtube url");
+      }
+    }     
+
+
+/* ======================================
+     PARSE VIMEO URL
+   ====================================== */
+    function parseVimeoUrl(videoUrl){
+
+      var url = videoUrl;
+      var regExp =/http(s)?:\/\/(www\.)?vimeo.com\/(\d+)(\/)?(#.*)?/;
+
+      var match = url.match(regExp);
+
+      if (match){
+          return match[3];
+      }else{
+          alert("not a vimeo url");
+      }
+    }        
+
+
+    //GET FORMATTED VIDEO DATA
+    // ==============================================
+    function getFormattedVideoData(contents){
+
+      var videoUrl = contents[0].videoUrl;
+      // console.log(videoUrl);
+      var dataPush = {};
+
+      if( videoUrl.indexOf("youtube") > -1 ){
+        var stripUniqueId = parseYoutubeUrl(videoUrl);
+        dataPush.type = "video";
+        dataPush.data = {};
+        dataPush.data.source = "youtube";
+        dataPush.data.remote_id = stripUniqueId;
+        return dataPush;
+      }    
+      else if( videoUrl.indexOf("vimeo") > -1 ){
+        var stripUniqueId = parseVimeoUrl(videoUrl);
+        dataPush.type = "video";
+        dataPush.data = {};
+        dataPush.data.source = "vimeo";
+        dataPush.data.remote_id = stripUniqueId;
+        return dataPush;
+      }      
+    }  
+
+    // {
+    //     "type": "image",
+    //     "data": {
+    //         "file": {
+    //             "url": "https://cementifyblogimages.s3-ap-southeast-1.amazonaws.com/1461129244236.jpg"
+    //         }
+    //     }
+    // }
+
+      // {
+      //     "type": "captioned_image",
+      //     "data": {
+      //         "text": "<p>fdfdfd</p>",
+      //         "format": "html",
+      //         "file": {
+      //             "url": "https://cementifyblogimages.s3-ap-southeast-1.amazonaws.com/1461129418305.jpg"
+      //         },
+      //         "caption": {
+      //             "text": null
+      //         }
+      //     }
+      // }
+
+
+    //GET FORMATTED IMAGE CAPTION DATA
+    // ==============================================
+    function getFormattedCaptionData(dataPush,imageCaption){
+      dataPush.type = "captioned_image";
+      dataPush.data.text = imageCaption;
+      dataPush.data.format = "html";
+      dataPush.data.caption = {};
+      dataPush.data.caption.text = null;
+      alert("caption");
+      return dataPush;
+    }   
+
+
+    //GET FORMATTED IMAGE DATA
+    // ==============================================
+    function getFormattedImageData(contents){
+
+      var obj = contents;
+      var imageUrl;
+      var imageCaption;
+      var dataPush = {};
+      if(typeof obj == 'undefined' && obj.length == 0 ) return;
+      for (var i=0; i<obj.length; i++){
+        imageUrl = obj[0].imageUrl;
+        imageCaption = obj[0].imageCaption;
+        dataPush.type = "image";
+        dataPush.data = {};
+        dataPush.data.file = {};
+        dataPush.data.file.url = imageUrl;
+        // if(imageCaption != null && typeof imageCaption != 'undefined' && imageCaption.length != 0 ){
+        //   dataPush = getFormattedCaptionData(dataPush,imageCaption);
+        // }
+      }
+      return dataPush;
+    }                   
 
 
     //FILL IN SIRTREVOR AND INITIALIZE
@@ -528,7 +648,7 @@ jQuery(document).ready(function($){
     function fillInSirTrevorAndInitialize(){
       var paragraphs = blogContent["paragraphs"];
       var sirTrevorArray = new Array();
-      console.log("paragraphs",paragraphs);
+      console.log("paragraphs",JSON.stringify( paragraphs ));
       var obj = paragraphs;
       for (var i=0; i<obj.length; i++){
         var type = obj[i]["paragraphType"];
@@ -539,11 +659,15 @@ jQuery(document).ready(function($){
                       contents = obj[i]["text"];
                       contents = $(contents);
                       tagName = contents[0].tagName;
-                      sirTrevorArray.push(getFormattedData(contents,tagName));
+                      sirTrevorArray.push(getFormattedTextData(contents,tagName));
                       break;
           case "Video":
+                      contents = obj[i]["videoList"];
+                      sirTrevorArray.push(getFormattedVideoData(contents));
                       break;
           case "Image":
+                      contents = obj[i]["imageList"];
+                      sirTrevorArray.push(getFormattedImageData(contents));                      
                       break;
           default:
                   break;                                                                  
