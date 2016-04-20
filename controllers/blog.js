@@ -34,8 +34,8 @@ router.get('/editPost/:id', function(req, res){
   var blogCommentsPromise = getBlogCommentsPromise(blogId,1);
 
   modules.Promise.all([blogContentPromise,blogCommentsPromise]).then(function(results){
-    console.log("data from blog content promeis",results[0]);
-    console.log("data from blog comment promeis",results[1]);
+    // console.log("data from blog content promeis",results[0]);
+    // console.log("data from blog comment promeis",results[1]);
     var combinedData = getCombinedObjects(results[0],results[1]);
     var blogType = JSON.parse(combinedData.content)[0]["blogType"];
     if( blogType == 'dynamic')

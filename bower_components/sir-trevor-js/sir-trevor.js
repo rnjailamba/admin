@@ -3341,6 +3341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    try {
 	      // Ensure the JSON string has a data element that's an array
+	      console.log(data);
 	      var jsonStr = JSON.parse(data);
 	      if (!_.isUndefined(jsonStr.data)) {
 	        result = jsonStr;
@@ -24475,7 +24476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var BlockControl = function(type) {
 	  this.type = type;
-	  console.log("type",type);
+	  // console.log("type",type);
 	  this.block_type = Blocks[this.type].prototype;
 	  this.can_be_rendered = this.block_type.toolbarEnabled;
 
@@ -24550,7 +24551,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  initialize: function() {
 	    for(var block_type in this.available_types) {
 	      if (Blocks.hasOwnProperty(block_type)) {
-	          console.log("here",block_type);
+	          // console.log("here",block_type);
 	        var block_control = new BlockControl(block_type);
 	        if (block_control.can_be_rendered) {
 	          this.$el.append(block_control.render().$el);

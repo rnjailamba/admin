@@ -418,8 +418,8 @@ jQuery(document).ready(function($){
     }         
 
 
-    //ON PAGE LOAD
-    // ==============================================      
+  //ON PAGE LOAD
+  // ==============================================      
   $(document).ready(function(){
 
       fillInData();
@@ -429,8 +429,8 @@ jQuery(document).ready(function($){
 
  
 
-    //ON SUBMIT
-    // ==============================================
+  //ON SUBMIT
+  // ==============================================
   $(document).ready(function(){
     $('.cd-normal-form input[type="submit"]').click(function(e){
       e.preventDefault();
