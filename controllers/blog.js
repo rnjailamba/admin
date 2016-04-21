@@ -25,7 +25,7 @@ router.get('/', function(req, res){
 });
 
 
-// EDIT
+// EDIT - GET - BOTH
 // ============================================== 
 router.get('/editPost/:id', function(req, res){
    
@@ -54,6 +54,8 @@ router.get('/editPost/:id', function(req, res){
 });
 
 
+// EDIT - POST - 1
+// ============================================== 
 router.post('/editPost/:id', function(req, res){
 
     console.log("in the post of editPost",req.body);
@@ -82,7 +84,6 @@ router.post('/editPost/:id', function(req, res){
     data.newBlogData = newBlogData;
     // data.userAboutus =  req.body.about;
     // data.name =  req.body.imageURLs;
-    data.customerId =  1310 ;          
     console.log("update request",data)        
 
     modules.request({
@@ -98,7 +99,49 @@ router.post('/editPost/:id', function(req, res){
           }
           else{
             res.status(404).send(response);
-            console.log("not signed up successfully");
+            console.log("not edited successfully");
+          }
+     });  
+});
+
+
+// EDIT - POST - 2
+// ============================================== 
+router.post('/editPost1/:id', function(req, res){
+
+    console.log("in the post of editPost1",req.body);
+    var data = {};
+    var oldBlogCondition = {};
+    oldBlogCondition.blogId = req.params.id;
+    data.oldBlogCondition = oldBlogCondition;
+
+    var newBlogData = {};
+    newBlogData.title = req.body.title;    
+    newBlogData.categoryId = req.body.category;
+    newBlogData.subCategoryId = req.body.subcategory;
+    newBlogData.approvedBy = loginMiddleWare.functions.getCustomerId(req,res);
+    newBlogData.isVerified = true;
+    newBlogData.paragraphs = req.body.sirTrevorText;
+    newBlogData.coverImageUrl =  req.body.coverImageUrl;
+    data.newBlogData = newBlogData;
+    data.userAboutus =  req.body.about;
+    data.name =  req.body.name;
+    console.log("update request1",data)        
+
+    modules.request({
+        url:mappings['blogService.updateBlog'], 
+        method: 'POST',
+        json: data
+      },
+        function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            bodyRet = body; 
+            console.log("pring returned bodyyy1");
+            res.status(200).send(response);
+          }
+          else{
+            res.status(404).send(response);
+            console.log("not edited successfully");
           }
      });  
 });

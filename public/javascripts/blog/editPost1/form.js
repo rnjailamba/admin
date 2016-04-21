@@ -173,8 +173,9 @@ jQuery(document).ready(function($){
 
     //IS LOGGED IN AND SHOW ALERT IF NOT
     // ==============================================
-    function isLoggedIn(blogData){
+    function isLoggedInCheck(blogData){
 
+        // console.log(JSON.stringify(blogData),"blogData");
         var x = $.ajax({
             url:"/loginMiddleware/isLoggedIn",
             type: 'GET',
@@ -183,24 +184,24 @@ jQuery(document).ready(function($){
             cache: false,
             processData: false,
             success: function(response) {
-                console.log('Am i logged in?',response);
-                if(response == true){
-					ajaxCallForSubmitBlog(blogData);
-                }
-                else{
-					swal({
-						title: 'Please login to post your blog',
-						type:'success',   
-						text: 'Thank you :)',
-						closeOnConfirm: true,
-						confirmButtonColor: "#2ecc71",
-						showLoaderOnConfirm: true,
-						allowEscapeKey:true,
-						allowOutsideClick:true,
-					}, function(){
-						loginSelected();// After this the handling is done in loginAsynWithCallbacks
-					});
-                }
+              console.log('Am i logged in?',response);
+              if(response == true){
+                 ajaxCallForUpdateBlog(blogData);
+              }
+              else{
+                swal({
+                  title: 'Please login to post your blog',
+                  type:'success',   
+                  text: 'Thank you :)',
+                  closeOnConfirm: true,
+                  confirmButtonColor: "#2ecc71",
+                  showLoaderOnConfirm: true,
+                  allowEscapeKey:true,
+                  allowOutsideClick:true,
+                }, function(){
+                  loginSelected();// After this the handling is done in loginAsynWithCallbacks
+                });
+              }
             },
             error: function(response) {
                 console.log('Error with register ' + response.statusText);
@@ -208,6 +209,36 @@ jQuery(document).ready(function($){
             }
         });
     }
+
+
+    //AJAX CALL FOR UPDATE BLOG
+    // ==============================================
+    function ajaxCallForUpdateBlog(data){
+        console.log("in Update log ",data);
+        $.ajax({
+            url:"/blog/editPost1/"+blogId,
+            type: 'POST',
+            async: true,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            context: this,
+            cache: false,
+            processData: false,
+            success: function(response) {
+                console.log('Blog submission succesfull',response);
+                if(response.statusCode == 200 ){
+                  window.location = "/blog/blogUpdateSummary?status=200";
+                }
+                else{
+                  window.location = "/blog/blogUpdateSummary";
+                }
+            },
+            error: function(response) {
+                console.log('Error with blog submission ' + response.statusText);
+                console.log("error page");
+            }
+        });
+    } 
 
 
     //AJAX CALL FOR SUBMITTING BLOG
@@ -246,15 +277,16 @@ jQuery(document).ready(function($){
       var objectsirTrevorText = JSON.parse( sirTrevorText );   // { foo: "bar" }
       var convertedArray = new Array(); // or the shortcut: = []
 
-      console.log("in convertSirTrevorData ",JSON.stringify(objectsirTrevorText));
 
       if(!isEmpty(objectsirTrevorText)){
-         var obj = objectsirTrevorText["data"];
+          var obj = objectsirTrevorText["data"];
+          console.log("in convertSirTrevorData ",JSON.stringify(obj),obj.length);
           var type;
           var data;
         for (var i=0; i<obj.length; i++){
+            console.log("Item name: "+obj[i]['type']);
+
           for (var name in obj[i]) {
-            // console.log("Item name: "+name+obj[i][name]);
             switch(name){
               case 'type':
                           type = obj[i][name];
@@ -286,13 +318,13 @@ jQuery(document).ready(function($){
                           break;
             case 'list':
                           console.log(JSON.stringify(data["listItems"]));
-                          var obj = data["listItems"];
+                          var listobj = data["listItems"];
                           var list = document.createElement('ul');
-                          for (var i=0; i<obj.length; i++){
+                          for (var j=0; j<listobj.length; j++){
                             // Create the list item:
                             var item = document.createElement('li');
                             // Set its contents:
-                            item.appendChild(document.createTextNode(obj[i]["content"]));
+                            item.appendChild(document.createTextNode(listobj[j]["content"]));
                             // Add it to the list:
                             list.appendChild(item);
                           }   
@@ -323,7 +355,7 @@ jQuery(document).ready(function($){
                           convertedArray.push(imageData);                      
                           break; 
             case 'captioned_image':
-                          console.log(JSON.stringify(data['file']));
+                          console.log("captioned_image",JSON.stringify(data['file']));
                           var imageData = {};
                           var imageURLs = new Array();
                           var caption = data['text'];
@@ -334,6 +366,7 @@ jQuery(document).ready(function($){
                           var singleImageData = {};
                           if( captionText.trim().length > 0 ){
                             singleImageData.imageCaption = captionText.trim();
+                            alert("caption is there");
                           }
                           singleImageData.imageUrl = data['file']['url'];
                           imageURLs.push ( singleImageData );
@@ -383,7 +416,7 @@ jQuery(document).ready(function($){
       }
       return convertedArray;
  
-    }     
+    }    
 
 
     //ISEMPTY
@@ -432,20 +465,6 @@ jQuery(document).ready(function($){
 
       }                  
     } 
-
-
-    //ADD IMAGES
-    // ==============================================
-    function addImages(){
-      // var paragraphs = blogContent["paragraphs"];
-      // console.log("paragraphs",paragraphs);
-      // var obj = paragraphs;
-      // for (var i=0; i<obj.length; i++){
-      //   var imageUrl = obj[i]["imageUrl"];
-      //   addImagesToSortable(imageUrl);
-      // }      
-
-    }   
 
 
     // {
@@ -626,7 +645,7 @@ jQuery(document).ready(function($){
       var imageUrl;
       var imageCaption;
       var dataPush = {};
-      if(typeof obj == 'undefined' && obj.length == 0 ) return;
+      if(obj == null || typeof obj == 'undefined' || obj.length == 0 ) return;
       for (var i=0; i<obj.length; i++){
         imageUrl = obj[0].imageUrl;
         imageCaption = obj[0].imageCaption;
@@ -758,7 +777,6 @@ jQuery(document).ready(function($){
       
       var obj = imageList;
       var photoImage;
-      $('#listWithHandle').empty();
       for (var i=0; i<obj.length; i++){
         var imageUrl = obj[i]["imageUrl"];
         addImagesToSortable(imageUrl);
@@ -786,9 +804,10 @@ jQuery(document).ready(function($){
     //ADD IMAGES
     // ==============================================
     function addImages(){
-     
+      
+      $('#listWithHandle').empty();
       var obj = blogContent.paragraphs;
-      console.log(obj);
+      // console.log("all stuff",obj);
       for (var i=0; i<obj.length; i++){
         switch( obj[i]["paragraphType"]){
           case 'Image':
@@ -798,7 +817,57 @@ jQuery(document).ready(function($){
                     break;
         }
       }      
-    }     
+    }
+
+
+    //SHOW ALERT
+    // ==============================================
+    function showAlert(text){
+
+        swal({   
+                title: "Oops.....",   
+                text: text,
+                timer: 1500,   
+                allowEscapeKey:true,
+                allowOutsideClick:true,       
+                showConfirmButton: true  
+              });
+
+    }         
+
+
+    //COUNT IMAGES
+    // ==============================================
+    function countImages(sirTrevorText){
+      var objectsirTrevorText = JSON.parse( sirTrevorText );   // { foo: "bar" }
+      var cnt = 0;
+      if(!isEmpty(objectsirTrevorText)){
+         var obj = objectsirTrevorText["data"];
+          var type;
+          var data;
+        for (var i=0; i<obj.length; i++){
+          for (var name in obj[i]) {
+            // console.log("Item name: "+name+obj[i][name]);
+            switch(name){
+              case 'type':
+                          type = obj[i][name];
+                          break;
+            } 
+          }// end inner for loop
+          // console.log(type);
+          switch(type){
+            case 'image':
+                          cnt++;                      
+                          break; 
+            case 'captioned_image':
+                          cnt++;                      
+                          break;
+          }
+        } // end outer for loop
+      }
+     
+      return cnt; 
+    }         
 
 
     //GET COVER IMAGE
@@ -806,7 +875,7 @@ jQuery(document).ready(function($){
     function getCoverImage(imageElements){
       var isChecked = $("input:radio[name='coverImage']").is(":checked");
       if( isChecked ){
-        return $("input:radio[name='coverImage']").val()
+        return $("input:radio[name='coverImage']:checked").val();
       }
       else{
         return null;
@@ -844,14 +913,14 @@ jQuery(document).ready(function($){
   	$(document).ready(function(){
   		$('.cd-normal-form input[type="submit"]').click(function(e){
   			e.preventDefault();
-        alert("in up")
   			var checkName = checkInputTextFieldEmpty('.myfield-name',e);
   			var checkAbout = checkInputTextFieldEmpty('.myfield-about',e);
   			// var checkPhone = checkInputTextFieldEmpty('.myfield-phone',e);
   			var checkTitle = checkInputTextFieldEmpty('.myfield-title',e);
   			var checkCategory = checkInputSelectFieldEmpty('.category',e);
   			var checkSubcategory = checkInputSelectFieldEmpty('.subcategory',e);
-
+        var countImg;
+        var coverImageUrl;
   		   	// as soon as a key is pressed on the keyboard, hide the tooltip.
   			$(window).keypress(function() {
   			  $('.myfield').tooltipster('hide');
@@ -870,8 +939,9 @@ jQuery(document).ready(function($){
           SirTrevor.onBeforeSubmit();
           SirTrevor.SKIP_VALIDATION = true;
           var sirTrevorText = $('.js-st-instance').val();
+          // console.log(sirTrevorText,"sirTrevorText");
           var convertedArray = convertSirTrevorData(sirTrevorText);
-          console.log(JSON.stringify(convertedArray));  
+          // console.log(JSON.stringify(convertedArray));  
           var blogData = {};        
   				blogData.name = name;
   				blogData.about = about;
@@ -881,20 +951,25 @@ jQuery(document).ready(function($){
   				blogData.subcategory = subcategory;
   				blogData.sirTrevorText = convertedArray;
   				// console.log(name,phone,title,category,subcategory,tinymceText,imageURLs);
-  				publishAttemptedWithFullDataWritePost = true;
-  				isLoggedIn(blogData);
+          countImg = countImages(sirTrevorText);
+          coverImageUrl = getCoverImage();
+          blogData.coverImageUrl = coverImageUrl;
+
+          if(countImg < 1){
+            showAlert("You have not added any photos ! :)");
+          }
+          else if(coverImageUrl == null ){
+            showAlert("You have not selected a cover photo ! :)");
+          }
+          else{
+
+            publishAttemptedWithFullDataWritePost = true;
+            isLoggedInCheck(blogData);
+          }          
   	
   			}
   			else{
-  				sweetAlert("Oops...", "", "error");
-  			    swal({   
-                 	 	title: "Oops.....",   
-                 	 	text: "You have not filled up all the required fields above ! :)",
-                 	 	timer: 1500,   
-          					allowEscapeKey:true,
-          					allowOutsideClick:true,			 	
-                 	 	showConfirmButton: true	 
-                 	});
+          showAlert("You have not filled up all the required fields above ! :)");
   			}
 
   		});

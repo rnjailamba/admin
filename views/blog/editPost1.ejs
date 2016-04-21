@@ -20,6 +20,9 @@
     <link rel="stylesheet" type="text/css" href="/css/blog/form.css"></link> <!-- css for text editor and form for submission , including the tooltip stuff-->
     <link rel="stylesheet" href="/css/blog/editPost/sortable.css"><!-- css for todo list for selecting the images -->
     <script src="/js/blog/editPost/sortable.js"></script> <!-- js for the todo list with images -->    
+    <link rel="stylesheet" type="text/css" href="/css/common/tooltipster.css"></link> <!-- css for tooltipster -->
+    <link rel="stylesheet" href="/css/common/sweetAlert.css"><!-- css for sweet alert -->
+
 </head>
 
 <body>
@@ -41,32 +44,7 @@
         <h1 class="heading">Change your blog entry below</h1>        
         <textarea class="js-st-instance">
 
-        </textarea>
-
-        <fieldset>
-            <legend style="text-align: center;">Delete / Reorder / Select Cover Photo :</legend>
-        </fieldset>
-        <!-- List with handle -->
-        <div id="listWithHandle" class="list-group">
-        <div class="list-group-item">
-          <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
-          <img src="http://placehold.it/350x150">
-          <input type="radio" name="gender" value="female">
-          <i class="js-remove">✖</i>
-        </div>
-        <div class="list-group-item">
-          <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
-          <img src="http://placehold.it/350x151">
-          <input type="radio" name="gender" value="female">
-          <i class="js-remove">✖</i>
-        </div>
-        <div class="list-group-item">
-          <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
-          <img src="http://placehold.it/350x152">
-          <input type="radio" name="gender" value="female">
-          <i class="js-remove">✖</i>
-        </div>
-        </div>        
+        </textarea>     
 
         <section>
             <h1 class="heading">Enter Blog Details</h1>                  
@@ -122,6 +100,31 @@
                 </fieldset>
             </div>
 
+            <fieldset>
+                <legend style="text-align: center;">Delete / Reorder / Select Cover Photo :</legend>
+            </fieldset>
+            <!-- List with handle -->
+            <div id="listWithHandle" class="list-group">
+            <div class="list-group-item">
+              <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+              <img src="http://placehold.it/350x150">
+              <input type="radio" name="gender" value="female">
+              <i class="js-remove">✖</i>
+            </div>
+            <div class="list-group-item">
+              <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+              <img src="http://placehold.it/350x151">
+              <input type="radio" name="gender" value="female">
+              <i class="js-remove">✖</i>
+            </div>
+            <div class="list-group-item">
+              <!-- <span class="glyphicon glyphicon-move" aria-hidden="true"></span> -->
+              <img src="http://placehold.it/350x152">
+              <input type="radio" name="gender" value="female">
+              <i class="js-remove">✖</i>
+            </div>
+            </div>               
+
             <div class="cd-normal-form floating-labels" >
                 <div>
                     <input type="submit" value="Update Blog"></input>                    
@@ -169,6 +172,7 @@
 <script type="text/javascript" src="/js/blog/editPost1/ordered-list.js"></script><!-- js for ordered list block -->
 
 <script src="/js/blog/editPost1/sir-trevor-custom.js"></script> <!-- js for customizing sir trevor -->
+<script src="/js/common/tooltipster.js"></script> <!-- js for tooltipster -->
 
 
 </html>

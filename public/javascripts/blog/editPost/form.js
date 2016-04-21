@@ -377,7 +377,7 @@ jQuery(document).ready(function($){
     function getCoverImage(imageElements){
       var isChecked = $("input:radio[name='coverImage']").is(":checked");
       if( isChecked ){
-        return $("input:radio[name='coverImage']").val()
+        return $("input:radio[name='coverImage']:checked").val();
       }
       else{
         return null;
@@ -405,7 +405,6 @@ jQuery(document).ready(function($){
     // ==============================================
     function showAlert(text){
 
-      sweetAlert("Oops...", "", "error");
         swal({   
                 title: "Oops.....",   
                 text: text,
