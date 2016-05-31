@@ -4,7 +4,7 @@ var app = modules.express();
 
 // VIEW ENGINE SETUP
 // ==============================================
-app.set('views', modules.path.join(__dirname, 'views'));
+app.set('/views', modules.path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');// set up ejs for templating
 app.use('/jquery', modules.express.static(__dirname + '/node_modules/jquery/dist/'));
 app.use('/bootstrap', modules.express.static(__dirname + '/node_modules/bootstrap/dist/'));
@@ -73,5 +73,5 @@ app.use(function(err, req, res, next) {
 });
 console.log("hellonew");
 
-process.env.PORT = 3001;
+process.env.PORT = 3005;
 module.exports = app;
