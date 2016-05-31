@@ -707,14 +707,14 @@ jQuery(document).ready(function($){
   //          ],
            onEditorRender : function() {
                 // this.block_manager.createBlock("OrderedList");
-                // this.block_manager.createBlock("CaptionedImage");
+                this.block_manager.createBlock("CaptionedImage");
 
               },
              blockTypes: [
                          "Text",
                          "Heading",
                          "Image",
-                         // "CaptionedImage",
+                         "CaptionedImage",
                          "List",
                          // "Quote",
                          // "Tweet",
